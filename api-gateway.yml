@@ -1,0 +1,42 @@
+jwt:
+  secretKey: khdvnkdmfh847rvhfjdcfh874ikrujfchiux34tnkhxfkasdnkasjn
+server:
+  port:
+    8081
+spring:
+
+
+  #api gateway config
+  cloud:
+    gateway:
+      routes:
+        - id: order-service
+          uri: http://localhost:9020
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - StripPrefix=2
+#            - RedirectTo=302, http://google.com
+            - name: LoggingOrderFilter
+            - name: Authentication
+              args:
+                isEnabled: true
+#            - name: Authorization
+#              args:
+#                allowedRoles: ADMIN, USER
+
+
+        #
+        - id: inventory-service
+          uri: http://localhost:9010
+          predicates:
+            - Path=/api/v1/inventory/**
+          filters:
+            - StripPrefix=2
+            - AddRequestHeader=X-Custom-Header, Gaurav
+            - name: Authentication
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
