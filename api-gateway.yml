@@ -11,7 +11,7 @@ spring:
     gateway:
       routes:
         - id: order-service
-          uri: http://localhost:9020
+          uri: lb://ORDER-SERVICE
           predicates:
             - Path=/api/v1/orders/**
           filters:
@@ -20,7 +20,7 @@ spring:
             - name: LoggingOrderFilter
             - name: Authentication
               args:
-                isEnabled: true
+                isEnabled: false
 #            - name: Authorization
 #              args:
 #                allowedRoles: ADMIN, USER
@@ -28,7 +28,7 @@ spring:
 
         #
         - id: inventory-service
-          uri: http://localhost:9010
+          uri: lb://INVENTORY-SERVICE
           predicates:
             - Path=/api/v1/inventory/**
           filters:
@@ -36,7 +36,4 @@ spring:
             - AddRequestHeader=X-Custom-Header, Gaurav
             - name: Authentication
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+
